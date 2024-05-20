@@ -1,0 +1,10 @@
+﻿  func.c
+C:\Users\jeezu\Documents\GitHub\PA1_Adam_Ward_122\func.c(147,40): warning C4553: '==': result of expression not used; did you intend '='?
+C:\Users\jeezu\Documents\GitHub\PA1_Adam_Ward_122\func.c(287,53): warning C4142: 'worstSleep': benign redefinition of type
+  C:\Users\jeezu\Documents\GitHub\PA1_Adam_Ward_122\Header.h(55,6):
+  see declaration of 'worstSleep'
+  
+C:\Users\jeezu\Documents\GitHub\PA1_Adam_Ward_122\func.c(210,1): warning C4716: 'readInput': must return a value
+C:\Users\jeezu\Documents\GitHub\PA1_Adam_Ward_122\func.c(284,1): warning C4716: 'maxSteps': must return a value
+C:\Users\jeezu\Documents\GitHub\PA1_Adam_Ward_122\func.c(369,1): warning C4716: 'writeOutput': must return a value
+  PA1_Adam_Ward_122.vcxproj -> C:\Users\jeezu\Documents\GitHub\PA1_Adam_Ward_122\x64\Debug\PA1_Adam_Ward_122.exe
