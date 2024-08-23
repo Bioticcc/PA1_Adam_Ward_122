@@ -26,15 +26,16 @@ readInput(FILE* input, FitbitData* arr, FitbitData* arrProblemChildren){
 	char patientI[500];
 
 	fgets(patientI, 100, input);
-	fgets(patientI, 100, input); 
+	//fgets(patientI, 100, input); 
 
-	/*
+	char target[10];
+	
 	char* tok = strtok(patientI, ",");
 	tok = strtok(NULL, ",");
-	char target[10] = "12cx7";
+	//char target[10] = "12cx7";
 	strcpy(target, tok); //should give me the target person
-	*/
-	char target[10] = "12cx7";
+	
+	//char target[10] = "12cx7";
 	printf("Target: %s\n", target);
 
 	//fgets(patientI, 100, input); //just getting the next line because its title.
@@ -42,7 +43,7 @@ readInput(FILE* input, FitbitData* arr, FitbitData* arrProblemChildren){
 	//printf("Line\t\t|Patient\t|Minute\t\t|Calories\t|Distance\t|Floors\t|HR\t|Steps\t|SL\t|\n");
 	//just using fgets twice on the top line of the file to skip past the two title thingies
 	line = 3; //represents the line of the file we starting at
-	char* tok;
+	
  	while (fgets(patientI, 500, input)!=NULL) {
 		bad = 0;
 		//if (i >= 1440) return 0;
@@ -331,6 +332,7 @@ char worstSleep(FitbitData* arr, char* worstSleepS) {
 				}
 			}
 		}
+
 	}
 	
 	worstSleepS[100] = "";
