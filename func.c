@@ -13,7 +13,6 @@ char* stok(char** p, const char* delim) {
 	else {
 		*p = NULL;
 	}
-
 	return s;
 }
 //first, Im going to just read everything in the csv into arr, and replace any NULL's/empties with 0
@@ -24,6 +23,9 @@ readInput(FILE* input, FitbitData* arr, FitbitData* arrProblemChildren){
 	int line = 1;
 	int i = 0;
 	char patientI[500];
+
+	char prevprev[50];
+	char prev[50];
 
 	fgets(patientI, 100, input);
 	//fgets(patientI, 100, input); 
@@ -42,9 +44,23 @@ readInput(FILE* input, FitbitData* arr, FitbitData* arrProblemChildren){
 
 	//printf("Line\t\t|Patient\t|Minute\t\t|Calories\t|Distance\t|Floors\t|HR\t|Steps\t|SL\t|\n");
 	//just using fgets twice on the top line of the file to skip past the two title thingies
-	line = 3; //represents the line of the file we starting at
-	
+	line = 0; //represents the line of the file we starting at
+	int once = 1;
+
+	//okay idea time, an array that logs every minute that occurs, and if a minute has already been logged it counts as 'bad'
+	char minutes[1500][50];
+	int min = 0;
+	fgets(patientI, 500, input);
+
  	while (fgets(patientI, 500, input)!=NULL) {
+
+		/*
+		alright so current issue: seems to be not actually skipping the 'bad' lines. curious >:(
+		*/
+		//printf("line: %d/ Curr Arr Size: %d\n",line, i); 
+		if (line == 2 && once) {
+			line = 0; once = 0;
+		}
 		bad = 0;
 		//if (i >= 1440) return 0;
 		//printf("Current line: %d\n", line);
@@ -63,81 +79,113 @@ readInput(FILE* input, FitbitData* arr, FitbitData* arrProblemChildren){
 						strcpy(arrProblemChildren[j].patient, tok);
 						a = 0; 
 						c++;
-
-						break; }
+						break; 
+					}
 					else if (strcmp(tok, target) == 0) { strcpy(arr[i].patient, tok);  }
 					//printf("[%d]", strlen(tok));
 					//printf("[%d]: %s - %s\n", i,tok, arr[i].patient);
 					c++;
 					break;
 				case 1:
-					//minutes field
-					if (bad) { strcpy(arrProblemChildren[j].minute, tok); }
+					//first an foremost, if its already been seen in minutes, it is BAD. >:(
+					for (int min = 0; min < 1500; min++) {
+						if (strcmp(tok, minutes[min]) == 0) {
+							//already in minute! bad!
+							bad = 1;
+						}
 
-					strcpy(arr[i].minute, tok);
+					}
+
+					//minutes field
+					strcpy(prevprev, prev);
+					//printf("(%s-%s) - ", tok, prev);
+
+					if (bad) { strcpy(arrProblemChildren[j].minute, tok); c++; break;}
+
+					else if (strcmp(tok,prev)==0 && bad==0) {
+						printf("found the bastard: ");
+						strcpy(arrProblemChildren[j].minute, tok);
+						bad = 1;
+
+					}//12, 28, 39, 56, 152, 1285, 
+					else if (bad==0){
+						strcpy(arr[i].minute, tok);
+					}
+					strcpy(prev, tok);
+					strcpy(minutes[min], tok);
+					min++;
 					c++;
 					break;
 				case 2:
 					//calories field
-					if (bad) {arrProblemChildren[j].calories = strtod(tok, NULL);}
+					if (bad) { arrProblemChildren[j].calories = strtod(tok, NULL); c++; break; }
 
 					if (strlen(tok) == 0) {
 						arr[i].calories = -1;
 						c++;
 						break;
 					}
-					arr[i].calories = strtod(tok, NULL);
-					//printf("[%d]", strlen(tok));
+					else if (bad == 0) {
+						arr[i].calories = strtod(tok, NULL);
+						//printf("[%d]", strlen(tok));
+					}
 					c++;
 					break;
 				case 3:
 					//distance field
-					if (bad) { arrProblemChildren[j].distance = strtod(tok, NULL); }
+					if (bad) { arrProblemChildren[j].distance = strtod(tok, NULL); c++; break;}
 
-					if (strlen(tok) == 0) {
+					else if (bad == 0 && (strlen(tok) == 0)){
 						arr[i].distance = -1;
 						c++;
 						break;
 					}
-					arr[i].distance = strtod(tok, NULL);
+					else if (bad == 0) {
+						arr[i].distance = strtod(tok, NULL);
+					}
 					//printf("[%d]", strlen(tok));
-
 					c++;
 					
 					break;
 				case 4:
 					//floors field
-					if (bad) { arrProblemChildren[j].floors = atoi(tok); }
+					if (bad) { arrProblemChildren[j].floors = atoi(tok); c++; break;}
 
-					if (strlen(tok) == 0) {
+					else if (bad == 0 && (strlen(tok) == 0)) {
 						arr[i].floors = -1;
 						break;
 					}
-					arr[i].floors = atoi(tok);
+					else if (bad == 0) {
+						arr[i].floors = atoi(tok);
+					}
 					//printf("[%d]", strlen(tok));
 					c++;
 					break;
 				case 5:
 					//heartrate field
-					if (bad) { arrProblemChildren[j].heartRate = atoi(tok); }
+					if (bad) { arrProblemChildren[j].heartRate = atoi(tok); c++; break;}
 
-					if (strlen(tok) == 0) {
+					else if (bad == 0 && (strlen(tok) == 0)) {
 						arr[i].heartRate = -1;
 						c++;
 						break;
 					}
-					arr[i].heartRate = atoi(tok);
+					else if (bad == 0) {
+						arr[i].heartRate = atoi(tok);
+					}
 					//printf("[%d]", strlen(tok));
 					c++;
 					break;
 				case 6:
 					//steps field
-					if (bad) { arrProblemChildren[j].steps = atoi(tok); j++; }
-					arr[i].steps = atoi(tok);
-					if (strlen(tok) == 0) {
+					if (bad) { arrProblemChildren[j].steps = atoi(tok); j++; c++; break; }
+					else if ((bad == 0) && strlen(tok) == 0) {
 						arr[i].steps = -1;
 						c++;
 						break;
+					}
+					else if (bad == 0) {
+						arr[i].steps = atoi(tok);
 					}
 					//printf("[%d]", strlen(tok));
 					c++;
@@ -165,13 +213,10 @@ readInput(FILE* input, FitbitData* arr, FitbitData* arrProblemChildren){
 				}
 				
 			}
-			if (bad) j++;
-			//if (i > 1439) {
-				//printf("Problem children: line:%d - index:%d - patient:%s - time:%s\n", line, i, arr[i].patient, arr[i].minute);
-				//system("pause");
-			//}
+			if (bad==1) { j++;};
+			
 			//printf("[%d]", c);
-			//printf("line[%d]\t|%s\t\t|%s\t|%lf\t|%lf\t|%d\t|%d\t|%d\t|%d\t|\n", line + 1, arr[i].patient, arr[i].minute, arr[i].calories, arr[i].distance, arr[i].floors, arr[i].heartRate, arr[i].steps, arr[i].sleepLevel);
+			//printf("array[%d]\t|%s\t\t|%s\t|%lf\t|%lf\t|%d\t|%d\t|%d\t|%d\t|\n", i, arr[i].patient, arr[i].minute, arr[i].calories, arr[i].distance, arr[i].floors, arr[i].heartRate, arr[i].steps, arr[i].sleepLevel);
 			if (i > 0) {
 				if (strcmp(arr[i].minute, arr[i - 1].minute) == 0) {
 					//printf("\nFOUND THE FuCKER %s\n", arr[i].minute);
@@ -188,13 +233,9 @@ readInput(FILE* input, FitbitData* arr, FitbitData* arrProblemChildren){
 				}
 			}
 
-			if (a) {
+			if (a && bad==0) {
 				//printf("No line skip, index: %d\n", i);
 				i++; 
-			}
-			else {
-				//printf("index after line skip: %d\n", i);
-				//system("pause");
 			}
 		line++;
 
@@ -359,13 +400,17 @@ int writeOutput(FitbitData* arr, FILE* output, maxStep* activity, double Cal, do
 	//it appears my worstSleepS just aqquires a "\x4\x" somewhere, no idea why how or where. bit of a bruh moment if you ask me.
 	fprintf(output, "(%s)", worstSleepS);
 	fprintf(output, "\n");
-	
+	/*
+	turns out im not supposed to print the bad lines, but instead the good ones! easier tbh
 	for (int i = 0; i < 1440; i++) {
 		if (strcmp(arrProblemChildren[i].patient, "") != 0) {
 			fprintf(output, "%s,%s,%lf,%lf,%d,%d,%d,%d,\n",arrProblemChildren[i].patient, arrProblemChildren[i].minute, arrProblemChildren[i].calories, arrProblemChildren[i].distance, arrProblemChildren[i].floors, arrProblemChildren[i].heartRate, arrProblemChildren[i].steps, arrProblemChildren[i].sleepLevel);
 		}
-	}
+	}*/
 	
+	for (int i = 0; i < 1440; i++) {
+		fprintf(output, "%s,%s,%lf,%lf,%d,%d,%d,%d,\n", arr[i].patient, arr[i].minute, arr[i].calories, arr[i].distance, arr[i].floors, arr[i].heartRate, arr[i].steps, arr[i].sleepLevel);
+	}
 	
 }
 

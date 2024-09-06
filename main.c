@@ -6,7 +6,7 @@ int main() {
 	FitbitData arr[1440]; 
 	FitbitData arrProblemChildren[1440]; //for the removed, duped, and other shitty lines
 	//opening FitbitData.csv in read mode
-	FILE* input = fopen("FitbitData.csv", "r");
+	FILE* input = fopen("FitbitData1.csv", "r");
 	if (input == NULL) {
 		printf("File failed to open...");
 		return 1;

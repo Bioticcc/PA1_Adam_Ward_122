@@ -1,8 +1,0 @@
-﻿  func.c
-C:\Users\jeezu\Documents\GitHub\PA1_Adam_Ward_122\func.c(148,40): warning C4553: '==': result of expression not used; did you intend '='?
-C:\Users\jeezu\Documents\GitHub\PA1_Adam_Ward_122\func.c(338,19): warning C4047: '=': 'char' differs in levels of indirection from 'char [1]'
-C:\Users\jeezu\Documents\GitHub\PA1_Adam_Ward_122\func.c(285,1): warning C4716: 'maxSteps': must return a value
-C:\Users\jeezu\Documents\GitHub\PA1_Adam_Ward_122\func.c(344,1): warning C4716: 'worstSleep': must return a value
-C:\Users\jeezu\Documents\GitHub\PA1_Adam_Ward_122\func.c(211,1): warning C4716: 'readInput': must return a value
-C:\Users\jeezu\Documents\GitHub\PA1_Adam_Ward_122\func.c(370,1): warning C4716: 'writeOutput': must return a value
-  PA1_Adam_Ward_122.vcxproj -> C:\Users\jeezu\Documents\GitHub\PA1_Adam_Ward_122\x64\Debug\PA1_Adam_Ward_122.exe
